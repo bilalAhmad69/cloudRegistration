@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 const LoginForm = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+  const [id, setId] = useState('');
   const [password, setPassword] = useState('');
-  const [age, setAge] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Submitted:', { name, email, password, age });
+    console.log('Submitted:', { id, password });
   };
 
   const formStyles = {
@@ -56,12 +54,12 @@ const LoginForm = () => {
     <div style={formStyles}>
       <h1 style={{ textAlign: 'center', marginBottom: '20px' }}>Login Form</h1>
       <form onSubmit={handleSubmit}>
-        <label style={labelStyles}>Email:</label>
+        <label style={labelStyles}>Student Id:</label>
         <input
-          type="email"
+          type="text"
           style={inputStyles}
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={id}
+          onChange={(e) => setId(e.target.value)}
         />
         <label style={labelStyles}>Password:</label>
         <input

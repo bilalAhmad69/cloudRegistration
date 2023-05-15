@@ -3,13 +3,18 @@ import { Link } from 'react-router-dom';
 
 const RegistrationForm = () => {
   const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+  const [id, setId] = useState('');
   const [password, setPassword] = useState('');
-  const [age, setAge] = useState('');
+  const [grade, setGrade] = useState('');
+  const [guardian, setGuardian] = useState('');
+  const [phone, setPhone] = useState('');
+  const [dob, setDob] = useState('');
+
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Submitted:', { name, email, password, age });
+    console.log('Submitted:', { name, id, password, grade });
   };
 
   const formStyles = {
@@ -52,11 +57,17 @@ const RegistrationForm = () => {
     fontSize: '16px',
     cursor: 'pointer',
   };
-
   return (
     <div style={formStyles}>
       <h1 style={{ textAlign: 'center', marginBottom: '20px' }}>Registration Form</h1>
       <form onSubmit={handleSubmit}>
+      <label style={labelStyles}>Student Id:</label>
+        <input
+          type="text"
+          style={inputStyles}
+          value={id}
+          onChange={(e) => setId(e.target.value)}
+        />
         <label style={labelStyles}>Name:</label>
         <input
           type="text"
@@ -64,12 +75,12 @@ const RegistrationForm = () => {
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
-        <label style={labelStyles}>Email:</label>
+          <label style={labelStyles}>Grade:</label>
         <input
-          type="email"
+          type="text"
           style={inputStyles}
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={grade}
+          onChange={(e) => setGrade(e.target.value)}
         />
         <label style={labelStyles}>Password:</label>
         <input
@@ -78,13 +89,28 @@ const RegistrationForm = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <label style={labelStyles}>Age:</label>
+        <label style={labelStyles}>DOB:</label>
         <input
           type="number"
           style={inputStyles}
-          value={age}
-          onChange={(e) => setAge(e.target.value)}
+          value={dob}
+          onChange={(e) => setDob(e.target.value)}
         />
+         <label style={labelStyles}>Guardian:</label>
+        <input
+          type="number"
+          style={inputStyles}
+          value={guardian}
+          onChange={(e) => setGuardian(e.target.value)}
+        />
+         <label style={labelStyles}>Phone Number:</label>
+        <input
+          type="number"
+          style={inputStyles}
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+        />
+        
         <div style = {{display:"flex" , justifyContent:'center'}}>
         <button type="submit" style={buttonStyles}>
           Register
