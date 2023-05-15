@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link} from 'react-router-dom';
 
-const Home = () => {
-
+const Home = ({data}) => {
   const formStyles = {
     display: 'flex',
     flexDirection: 'column',
@@ -47,15 +46,13 @@ const Home = () => {
   return (
     <div style={formStyles}>
       <h1 style={{ textAlign: 'center', marginBottom: '20px' }}>Student Details</h1>
-      <form >
-    
-      <label style={labelStyles}>Student Id:    10001</label>
-        <label style={labelStyles}>Name:    Bilal Ahmad</label>
-          <label style={labelStyles}>Grade:  10th</label>
-        <label style={labelStyles}>DOB:   19-09-09</label>
-         <label style={labelStyles}>Guardian:  Bilal</label>
-         <label style={labelStyles}>Phone Number:   01290393</label>
-      </form>
+      <label style={labelStyles}>Student Id:    {data.id}</label>
+        <label style={labelStyles}>Name:    {data.name}</label>
+          <label style={labelStyles}>Grade:  {data.grade}</label>
+        <label style={labelStyles}>DOB:   {data.dob}</label>
+         <label style={labelStyles}>Guardian: {data.guardian}</label>
+         <label style={labelStyles}>Phone Number:   {data.phone}</label>
+         <div> <Link to="/" >Logout</Link></div>
     </div>
   );
 };

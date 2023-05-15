@@ -1,12 +1,28 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import {db} from '../firebase'
+import { getDocs , collection , where , query} from "firebase/firestore"; 
+import Home from './home';
+import Error from './error'
 const LoginForm = () => {
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
-
+  const [data , setData] = useState(null)
+  const userRef = collection(db, 'users');
+  const [error , setError] = useState(false);
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Submitted:', { id, password });
+    const q = query(userRef, where('id', '==', id), where('password', '==', password));
+getDocs(q)
+  .then((querySnapshot) => {
+    querySnapshot.forEach((doc) => {
+     setData(doc.data());
+    });
+  })
+  .catch((error) => {
+    setError(true);
+    console.log("Error getting documents: ", error);
+  });
   };
 
   const formStyles = {
@@ -49,7 +65,12 @@ const LoginForm = () => {
     fontSize: '16px',
     cursor: 'pointer',
   };
-
+  if(error) {
+   return <Error message={"password or id is wrong"}/>
+  }
+   if(data != null){
+    return <Home  data = {data}/>
+   }
   return (
     <div style={formStyles}>
       <h1 style={{ textAlign: 'center', marginBottom: '20px' }}>Login Form</h1>

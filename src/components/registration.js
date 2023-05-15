@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-
+import {db} from '../firebase'
+import Error from './error'
+import { doc, addDoc , getDoc, collection} from "firebase/firestore"; 
+import Home from './home';
 const RegistrationForm = () => {
   const [name, setName] = useState('');
   const [id, setId] = useState('');
@@ -9,12 +12,33 @@ const RegistrationForm = () => {
   const [guardian, setGuardian] = useState('');
   const [phone, setPhone] = useState('');
   const [dob, setDob] = useState('');
-
-
-
-  const handleSubmit = (e) => {
+  const [data, setData]= useState(null);
+  const [error , setError] = useState(false);
+  const usersRef = collection(db, 'users');
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Submitted:', { name, id, password, grade });
+    const newDocument = {
+      name: name,
+      id: id,
+      password: password,
+      grade: grade,
+      guardian: guardian,
+      phone: phone,
+      dob: dob,
+    };
+    addDoc(usersRef, newDocument)
+    .then(docRef => {
+      console.log('Document written with ID: ', docRef.id);
+      const newDocRef = doc(usersRef, docRef.id);
+      return getDoc(newDocRef);
+    })
+    .then(docSnap => {
+       setData(docSnap.data())
+    })
+    .catch(error => {
+      console.error('Error adding document: ', error);
+      setError(true);
+    });
   };
 
   const formStyles = {
@@ -57,6 +81,12 @@ const RegistrationForm = () => {
     fontSize: '16px',
     cursor: 'pointer',
   };
+  if(error){
+    <Error message = {"some thing went wrong"} />
+  }
+  if(data != null) {
+    return <Home  data={data}/>
+  }
   return (
     <div style={formStyles}>
       <h1 style={{ textAlign: 'center', marginBottom: '20px' }}>Registration Form</h1>
@@ -91,21 +121,21 @@ const RegistrationForm = () => {
         />
         <label style={labelStyles}>DOB:</label>
         <input
-          type="number"
+          type="text"
           style={inputStyles}
           value={dob}
           onChange={(e) => setDob(e.target.value)}
         />
          <label style={labelStyles}>Guardian:</label>
         <input
-          type="number"
+          type="text"
           style={inputStyles}
           value={guardian}
           onChange={(e) => setGuardian(e.target.value)}
         />
          <label style={labelStyles}>Phone Number:</label>
         <input
-          type="number"
+          type="text"
           style={inputStyles}
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
