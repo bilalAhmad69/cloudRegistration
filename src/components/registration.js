@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import {db} from '../firebase'
+import {db , storage} from '../firebase'
 import Error from './error'
 import { doc, addDoc , getDoc, collection} from "firebase/firestore"; 
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import Home from './home';
 const RegistrationForm = () => {
   const [name, setName] = useState('');
@@ -14,31 +15,50 @@ const RegistrationForm = () => {
   const [dob, setDob] = useState('');
   const [data, setData]= useState(null);
   const [error , setError] = useState(false);
+  const [ file , setFile] = useState('');
   const usersRef = collection(db, 'users');
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const newDocument = {
-      name: name,
-      id: id,
-      password: password,
-      grade: grade,
-      guardian: guardian,
-      phone: phone,
-      dob: dob,
-    };
-    addDoc(usersRef, newDocument)
-    .then(docRef => {
-      console.log('Document written with ID: ', docRef.id);
-      const newDocRef = doc(usersRef, docRef.id);
-      return getDoc(newDocRef);
-    })
-    .then(docSnap => {
-       setData(docSnap.data())
-    })
-    .catch(error => {
-      console.error('Error adding document: ', error);
-      setError(true);
-    });
+    if(!name || !id || !password || !grade || !guardian || !phone || !dob){
+     alert("some fields are missing");
+     return;
+    }
+    if (file) {
+      // if (file.type !== 'application/pdf') {
+      //   console.log('Invalid file format. Only PDF files are allowed.');
+      //   return;
+      // }
+      const storageRef = ref(storage, `${id}/${file.name}`);
+      const snapshot = await uploadBytes(storageRef, file);
+      const fileUrl = await getDownloadURL(snapshot.ref);
+      const newDocument = {
+        name: name,
+        id: id,
+        password: password,
+        grade: grade,
+        guardian: guardian,
+        phone: phone,
+        dob: dob,
+        fileUrl:fileUrl
+      };
+      addDoc(usersRef, newDocument)
+      .then(docRef => {
+        console.log('Document written with ID: ', docRef.id);
+        const newDocRef = doc(usersRef, docRef.id);
+        return getDoc(newDocRef);
+      })
+      .then(docSnap => {
+         setData(docSnap.data())
+      })
+      .catch(error => {
+        console.error('Error adding document: ', error);
+        setError(true);
+      });
+    }
+    else {
+      alert('upload your file please');
+      return;
+    }
   };
 
   const formStyles = {
@@ -140,7 +160,9 @@ const RegistrationForm = () => {
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
         />
-        
+         <div>
+      <input type="file" onChange={(e) => setFile(e.target.files[0])} />
+        </div>
         <div style = {{display:"flex" , justifyContent:'center'}}>
         <button type="submit" style={buttonStyles}>
           Register

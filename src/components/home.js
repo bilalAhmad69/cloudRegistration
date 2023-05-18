@@ -52,6 +52,9 @@ const Home = ({data}) => {
         <label style={labelStyles}>DOB:   {data.dob}</label>
          <label style={labelStyles}>Guardian: {data.guardian}</label>
          <label style={labelStyles}>Phone Number:   {data.phone}</label>
+         <a style={labelStyles} href={data.fileUrl} target="_blank" rel="noopener noreferrer">
+        View your Docs
+      </a>
          <div> <Link to="/" >Logout</Link></div>
     </div>
   );
